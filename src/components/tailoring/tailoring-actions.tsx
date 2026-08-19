@@ -8,7 +8,7 @@ interface TailoringActionsProps {
   jobUrl?: string;
   isAccepted: boolean;
   downloadUrls?: { cvUrl?: string; coverLetterUrl?: string };
-  onAccepted: () => void;
+  onAccepted: (urls: { cvUrl: string; coverLetterUrl: string }) => void;
 }
 
 export function TailoringActions({
@@ -24,7 +24,7 @@ export function TailoringActions({
 
   const handleAccept = () => {
     accept.mutate(sessionId, {
-      onSuccess: () => onAccepted(),
+      onSuccess: (data) => onAccepted(data),
     });
   };
 
@@ -42,10 +42,10 @@ export function TailoringActions({
   };
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <div className="flex flex-col gap-3">
       {!isAccepted ? (
         <Button
-          className="flex-1 gap-2 bg-[#3c6e71] hover:bg-[#284b63]"
+          className="w-full gap-2 bg-[#3c6e71] hover:bg-[#284b63]"
           onClick={handleAccept}
           disabled={accept.isPending}
         >
@@ -57,11 +57,11 @@ export function TailoringActions({
           {accept.isPending ? "Saving..." : "Accept & Save"}
         </Button>
       ) : (
-        <>
+        <div className="grid grid-cols-2 gap-3">
           {downloadUrls?.cvUrl && (
             <Button
               variant="outline"
-              className="flex-1 gap-2 border-[#d9d9d9] dark:border-[#353535]"
+              className="gap-2 border-[#d9d9d9] dark:border-[#353535]"
               onClick={() => window.open(downloadUrls.cvUrl, "_blank")}
             >
               <Download className="h-4 w-4" />
@@ -71,19 +71,19 @@ export function TailoringActions({
           {downloadUrls?.coverLetterUrl && (
             <Button
               variant="outline"
-              className="flex-1 gap-2 border-[#d9d9d9] dark:border-[#353535]"
+              className="gap-2 border-[#d9d9d9] dark:border-[#353535]"
               onClick={() => window.open(downloadUrls.coverLetterUrl, "_blank")}
             >
               <Download className="h-4 w-4" />
-              Download Cover Letter
+              Cover Letter
             </Button>
           )}
-        </>
+        </div>
       )}
 
       <Button
         variant="outline"
-        className="flex-1 gap-2 border-[#d9d9d9] dark:border-[#353535]"
+        className="w-full gap-2 border-[#d9d9d9] dark:border-[#353535]"
         onClick={handleApply}
         disabled={apply.isPending || !jobUrl}
       >

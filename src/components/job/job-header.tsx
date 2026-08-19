@@ -2,10 +2,12 @@ import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, MapPin, Calendar, Building2 } from "lucide-react";
-import type { FeedItem } from "@/types";
+import type { Job } from "@/types";
 
 function timeAgo(date: string): string {
-  const seconds = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000);
+  const seconds = Math.floor(
+    (new Date().getTime() - new Date(date).getTime()) / 1000,
+  );
   const intervals = [
     { label: "y", seconds: 31536000 },
     { label: "mo", seconds: 2592000 },
@@ -19,18 +21,17 @@ function timeAgo(date: string): string {
   return "Just now";
 }
 
-function companyInitial(name: string): string {
-  return name.charAt(0).toUpperCase();
+function companyInitial(name: string | undefined): string {
+  return name?.charAt(0).toUpperCase() ?? "?";
 }
 
 interface JobHeaderProps {
-  item: FeedItem;
+  job: Job;
+  matchScore?: number;
 }
 
-export function JobHeader({ item }: JobHeaderProps) {
+export function JobHeader({ job, matchScore }: JobHeaderProps) {
   const navigate = useNavigate();
-  const { job, score } = item;
-  const matchPercent = Math.round(score * 100);
 
   return (
     <div className="space-y-4">
@@ -44,7 +45,6 @@ export function JobHeader({ item }: JobHeaderProps) {
       </Button>
 
       <div className="flex items-start gap-4">
-        {/* Company Avatar */}
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#3c6e71] text-xl font-bold text-white">
           {companyInitial(job.company)}
         </div>
@@ -73,9 +73,11 @@ export function JobHeader({ item }: JobHeaderProps) {
                 Remote
               </Badge>
             )}
-            <Badge className="bg-[#284b63]/10 text-[10px] text-[#284b63] hover:bg-[#284b63]/20">
-              {matchPercent}% match
-            </Badge>
+            {matchScore !== undefined && (
+              <Badge className="bg-[#284b63]/10 text-[10px] text-[#284b63] hover:bg-[#284b63]/20">
+                {Math.round(matchScore * 100)}% match
+              </Badge>
+            )}
           </div>
         </div>
       </div>

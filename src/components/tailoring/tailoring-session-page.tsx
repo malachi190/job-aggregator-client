@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { useParams, useLocation, useNavigate } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Briefcase } from "lucide-react";
+import { useParams, useLocation } from "@tanstack/react-router";
 import { CVPreview } from "./cv-preview";
 import { CoverLetterPreview } from "./cover-letter-preview";
 import { RefineForm } from "./refine-form";
 import { TailoringActions } from "./tailoring-actions";
 import type { TailoringContent, Job } from "@/types";
+import { Briefcase, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "@tanstack/react-router";
 
 export function TailoringSessionPage() {
   const { sessionId } = useParams({ from: "/_app/tailoring/$sessionId" });
@@ -59,10 +59,9 @@ export function TailoringSessionPage() {
     setContent(newContent);
   };
 
-  const handleAccepted = () => {
+  const handleAccepted = (urls: { cvUrl: string; coverLetterUrl: string }) => {
     setIsAccepted(true);
-    // If your accept endpoint returns URLs, capture them:
-    // setDownloadUrls({ cvUrl: data.cvUrl, coverLetterUrl: data.coverLetterUrl });
+    setDownloadUrls(urls);
   };
 
   return (
@@ -83,14 +82,10 @@ export function TailoringSessionPage() {
           <h1 className="mt-1 text-xl font-bold text-[#353535] dark:text-white">
             {job.title}
           </h1>
-          <div className="mt-1 flex flex-wrap gap-2 text-sm text-[#353535]/60 dark:text-[#d9d9d9]/60">
-            <span>{job.location}</span>
-            {job.isRemote && (
-              <Badge className="bg-[#3c6e71]/10 text-[10px] text-[#3c6e71] hover:bg-[#3c6e71]/20">
-                Remote
-              </Badge>
-            )}
-          </div>
+          <p className="mt-1 text-sm text-[#353535]/60 dark:text-[#d9d9d9]/60">
+            {job.location}
+            {job.isRemote && " • Remote"}
+          </p>
         </div>
       )}
 

@@ -10,6 +10,7 @@ interface CVPreviewProps {
 }
 
 export function CVPreview({ cv }: CVPreviewProps) {
+  // console.log("cv", cv);
   const contact = cv.contact;
 
   return (
@@ -73,24 +74,36 @@ export function CVPreview({ cv }: CVPreviewProps) {
               Skills
             </h3>
             <div className="space-y-2">
-              {Object.entries(cv.skills).map(([category, skills]) => (
-                <div key={category}>
-                  <p className="text-xs font-medium text-[#353535]/60 dark:text-[#d9d9d9]/60">
-                    {category}
-                  </p>
-                  <div className="mt-1 flex flex-wrap gap-1.5">
-                    {skills.map((skill) => (
-                      <Badge
-                        key={skill}
-                        variant="outline"
-                        className="border-[#d9d9d9] text-xs dark:border-[#353535]"
-                      >
-                        {skill}
-                      </Badge>
-                    ))}
+              {Object.entries(cv.skills).map(([category, skills]) => {
+                // Normalize: backend may return string "a, b, c" or array ["a", "b", "c"]
+                const skillList = Array.isArray(skills)
+                  ? skills
+                  : typeof skills === "string"
+                    ? skills
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean)
+                    : [];
+
+                return (
+                  <div key={category}>
+                    <p className="text-xs font-medium text-[#353535]/60 dark:text-[#d9d9d9]/60">
+                      {category}
+                    </p>
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {skillList.map((skill: any) => (
+                        <Badge
+                          key={skill}
+                          variant="outline"
+                          className="border-[#d9d9d9] text-xs dark:border-[#353535]"
+                        >
+                          {skill}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -154,29 +167,40 @@ export function CVPreview({ cv }: CVPreviewProps) {
               Projects
             </h3>
             <div className="space-y-2">
-              {cv.projects.map((proj, i) => (
-                <div key={i}>
-                  <p className="text-sm font-semibold text-[#353535] dark:text-white">
-                    {proj.name}
-                  </p>
-                  <p className="text-xs text-[#353535]/60 dark:text-[#d9d9d9]/60">
-                    {proj.description}
-                  </p>
-                  {proj.tech && proj.tech.length > 0 && (
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {proj.tech.map((t) => (
-                        <Badge
-                          key={t}
-                          variant="secondary"
-                          className="bg-[#3c6e71]/10 text-[10px] text-[#3c6e71]"
-                        >
-                          {t}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+              {cv.projects.map((proj, i) => {
+                const techList = Array.isArray(proj.tech)
+                  ? proj.tech
+                  : typeof proj.tech === "string"
+                    ? proj.tech
+                        .split(",")
+                        .map((t) => t.trim())
+                        .filter(Boolean)
+                    : [];
+
+                return (
+                  <div key={i}>
+                    <p className="text-sm font-semibold text-[#353535] dark:text-white">
+                      {proj.name}
+                    </p>
+                    <p className="text-xs text-[#353535]/60 dark:text-[#d9d9d9]/60">
+                      {proj.description}
+                    </p>
+                    {techList.length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {techList.map((t: any) => (
+                          <Badge
+                            key={t}
+                            variant="secondary"
+                            className="bg-[#3c6e71]/10 text-[10px] text-[#3c6e71]"
+                          >
+                            {t}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

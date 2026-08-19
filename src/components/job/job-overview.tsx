@@ -16,14 +16,20 @@ export function JobOverview({ job }: JobOverviewProps) {
     {
       icon: Briefcase,
       label: "Work Arrangement",
-      value: job.isRemote ? "Remote" : job.employmentType ? job.employmentType.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) : "On-site",
+      value: job.isRemote
+        ? "Remote"
+        : job.employmentType
+          ? job.employmentType
+              .replace(/-/g, " ")
+              .replace(/\b\w/g, (l) => l.toUpperCase())
+          : "On-site",
     },
     {
       icon: DollarSign,
       label: "Salary",
       value:
-        job.salaryMin !== null
-          ? `$${job.salaryMin.toLocaleString()}${job.salaryMax !== null ? ` – ${job.salaryMax.toLocaleString()}` : ""}`
+        job.salaryMin != null
+          ? `$${job.salaryMin.toLocaleString()}${job.salaryMax != null ? ` – ${job.salaryMax.toLocaleString()}` : ""}`
           : "Not specified",
     },
     {
