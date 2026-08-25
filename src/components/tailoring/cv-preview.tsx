@@ -119,10 +119,10 @@ export function CVPreview({ cv }: CVPreviewProps) {
                 <div key={i}>
                   <div className="flex items-baseline justify-between">
                     <p className="text-sm font-semibold text-[#353535] dark:text-white">
-                      {exp.role}
+                      {exp.title}
                     </p>
                     <span className="text-xs text-[#353535]/50 dark:text-[#d9d9d9]/50">
-                      {exp.duration}
+                      {exp.dates}
                     </span>
                   </div>
                   <p className="text-xs text-[#3c6e71]">{exp.company}</p>

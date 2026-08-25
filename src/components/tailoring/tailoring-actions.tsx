@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Loader2, Check, ExternalLink, Download } from "lucide-react";
-import { useAcceptTailoring, useCreateApplication } from "@/hooks/api/use-tailoring";
+import { useAcceptTailoring } from "@/hooks/api/use-tailoring";
 
 interface TailoringActionsProps {
   sessionId: string;
   jobId: string;
-  jobUrl?: string;
+  applyUrl?: string | null;
   isAccepted: boolean;
   downloadUrls?: { cvUrl?: string; coverLetterUrl?: string };
   onAccepted: (urls: { cvUrl: string; coverLetterUrl: string }) => void;
@@ -14,13 +14,12 @@ interface TailoringActionsProps {
 export function TailoringActions({
   sessionId,
   jobId,
-  jobUrl,
+  applyUrl,
   isAccepted,
   downloadUrls,
   onAccepted,
 }: TailoringActionsProps) {
   const accept = useAcceptTailoring();
-  const apply = useCreateApplication();
 
   const handleAccept = () => {
     accept.mutate(sessionId, {
@@ -29,16 +28,7 @@ export function TailoringActions({
   };
 
   const handleApply = () => {
-    apply.mutate(
-      { jobId, tailoringSessionId: sessionId, status: "applied" },
-      {
-        onSuccess: () => {
-          if (jobUrl) {
-            window.open(jobUrl, "_blank", "noopener,noreferrer");
-          }
-        },
-      },
-    );
+    if (applyUrl) window.open(applyUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -85,14 +75,10 @@ export function TailoringActions({
         variant="outline"
         className="w-full gap-2 border-[#d9d9d9] dark:border-[#353535]"
         onClick={handleApply}
-        disabled={apply.isPending || !jobUrl}
+        disabled={!applyUrl}
       >
-        {apply.isPending ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <ExternalLink className="h-4 w-4" />
-        )}
-        {apply.isPending ? "Recording..." : "Apply to Job"}
+        <ExternalLink className="h-4 w-4" />
+        Apply to Job
       </Button>
     </div>
   );

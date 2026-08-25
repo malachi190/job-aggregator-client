@@ -69,10 +69,10 @@ api.interceptors.response.use(
           const res = await api.post("/auth/refresh", {
             refreshToken: state.refreshToken,
           });
-          const { accessToken, refreshToken, user } = res.data.data;
+          const { accessToken, refreshToken } = res.data.data;
           useAuthStore
             .getState()
-            .setToken(accessToken, refreshToken, "password", user);
+            .setToken(accessToken, refreshToken, "password", state.user as User);
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           originalRequest.headers["x-auth-provider"] = "password";
           return api(originalRequest);

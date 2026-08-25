@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useClerkLogin } from "./api/use-auth";
 
 export function useClerkSync() {
-  const { isSignedIn, isLoaded, userId } = useAuth();
+  const { isSignedIn, isLoaded, getToken } = useAuth();
   const { user: clerkUser } = useUser();
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
   const token = useAuthStore((state) => state.token);
@@ -20,17 +20,18 @@ export function useClerkSync() {
       if (attemptCount.current >= 3) return;
       attemptCount.current++;
 
-      const email = clerkUser.primaryEmailAddress?.emailAddress;
-      if (email && userId) {
-        clerkLogin.mutate(
-          { email, clerkId: userId },
-          {
-            onError: () => {
-              // Don't reset — let it retry up to 3 times total
+      void getToken().then((sessionToken) => {
+        if (sessionToken) {
+          clerkLogin.mutate(
+            { token: sessionToken },
+            {
+              onError: () => {
+                // Don't reset — let it retry up to 3 times total
+              },
             },
-          },
-        );
-      }
+          );
+        }
+      });
       return;
     }
 
@@ -40,5 +41,5 @@ export function useClerkSync() {
       return;
     }
 
-  }, [isLoaded, isSignedIn, hasHydrated, clerkUser, userId, token, provider]);
+  }, [isLoaded, isSignedIn, hasHydrated, clerkUser, getToken, token, provider]);
 }

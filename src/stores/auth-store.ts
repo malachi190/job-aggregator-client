@@ -8,6 +8,7 @@ interface AuthState {
   provider: 'clerk' | 'password' | null;
   user: User | null;
   hasHydrated: boolean;
+  isAuthenticated: () => boolean;
   setToken: (token: string, refreshToken: string, provider: 'clerk' | 'password', user: User) => void;
   clearAuth: () => void;
   setHasHydrated: (value: boolean) => void;
@@ -15,12 +16,13 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       token: null,
       refreshToken: null,
       provider: null,
       user: null,
       hasHydrated: false,
+      isAuthenticated: () => Boolean(get().token),
       setToken: (token, refreshToken, provider, user) => 
         set({ token, refreshToken, provider, user }),
       clearAuth: () => 

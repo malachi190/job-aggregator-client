@@ -51,7 +51,15 @@ function AppLayout() {
     }
 
     // Auth confirmed — now enforce onboarding
-    if (profile === null) {
+    if (
+      profile === null ||
+      (profile !== undefined &&
+        (!profile.role ||
+          !profile.seniority ||
+          !profile.location ||
+          profile.skills.length === 0 ||
+          profile.jobTitles.length === 0))
+    ) {
       navigate({ to: "/onboarding", replace: true });
     }
   }, [isReady, isAuthenticated, profile, navigate]);

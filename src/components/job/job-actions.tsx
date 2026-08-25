@@ -3,15 +3,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wand2, ExternalLink, Upload, Loader2, Bookmark } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useBaseCVs } from "@/hooks/api/use-base-cvs";
+import { useCreateApplication } from "@/hooks/api/use-applications";
+import { useSavedJobs, useToggleSavedJob } from '@/hooks/api/use-saved-jobs';
 
 interface JobActionsProps {
   jobId: string;
-  jobUrl?: string;
+  applyUrl?: string | null;
 }
 
-export function JobActions({ jobId, jobUrl }: JobActionsProps) {
+export function JobActions({ jobId, applyUrl }: JobActionsProps) {
   const navigate = useNavigate();
   const { data: cvs, isLoading: cvsLoading } = useBaseCVs();
+  const createApplication = useCreateApplication();
+  const { data: savedJobs } = useSavedJobs();
+  const toggleSaved = useToggleSavedJob();
+  const isSaved = savedJobs?.some((saved) => saved.jobId === jobId) ?? false;
 
   if (cvsLoading) {
     return (
@@ -37,12 +43,13 @@ export function JobActions({ jobId, jobUrl }: JobActionsProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         {/* Apply online */}
-        {jobUrl && (
+        {applyUrl && (
           <Button
             className="w-full gap-2 bg-[#3c6e71] hover:bg-[#284b63]"
-            onClick={() =>
-              window.open(jobUrl, "_blank", "noopener,noreferrer")
-            }
+            onClick={() => {
+              window.open(applyUrl, "_blank", "noopener,noreferrer");
+              createApplication.mutate(jobId);
+            }}
           >
             <ExternalLink className="h-4 w-4" />
             Apply online
@@ -76,13 +83,14 @@ export function JobActions({ jobId, jobUrl }: JobActionsProps) {
           </Button>
         )}
 
-        {/* Save placeholder */}
         <Button
           variant="ghost"
           className="w-full gap-2 text-[#353535]/70 hover:text-[#353535] dark:text-[#d9d9d9]/70 dark:hover:text-white"
+          onClick={() => toggleSaved.mutate({ jobId, saved: isSaved })}
+          disabled={toggleSaved.isPending}
         >
-          <Bookmark className="h-4 w-4" />
-          Save for later
+          <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+          {isSaved ? 'Saved' : 'Save for later'}
         </Button>
       </CardContent>
     </Card>

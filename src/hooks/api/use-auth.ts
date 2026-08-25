@@ -17,8 +17,7 @@ interface RegisterInput {
 }
 
 interface ClerkLoginInput {
-  email: string;
-  clerkId: string;
+  token: string;
 }
 
 interface AuthResponse {
@@ -60,8 +59,9 @@ export function useClerkLogin() {
   return useMutation({
     mutationFn: async (input: ClerkLoginInput) => {
       const res = await api.post<ApiResponse<AuthResponse>>(
-        `/auth/login?provider=clerk&clerkId=${input.clerkId}`,
-        { email: input.email },
+        "/auth/login?provider=clerk",
+        {},
+        { headers: { Authorization: `Bearer ${input.token}` } },
       );
       return res.data;
     },
@@ -89,10 +89,8 @@ export function useRegister() {
     },
     onSuccess: (data) => {
       if (data.status && data.data) {
-        const provider = data.data?.user.authProvider.toLowerCase() as
-          "password" | "clerk";
         const { accessToken, refreshToken, user } = data.data;
-        setToken(accessToken, refreshToken, provider, user);
+        setToken(accessToken, refreshToken, user.authProvider, user);
         toast.success("Account created — welcome to Crawler");
       }
     },

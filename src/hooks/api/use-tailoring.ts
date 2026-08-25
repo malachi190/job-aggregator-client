@@ -1,4 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { Job } from '@/types';
 import { api } from "@/lib/api";
 import type { ApiResponse, TailoringContent } from "@/types";
 import { toast } from "sonner";
@@ -21,6 +22,23 @@ export function useGenerateTailoring() {
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to generate tailored CV");
     },
+  });
+}
+
+export function useTailoringSession(sessionId: string, enabled = true) {
+  return useQuery({
+    queryKey: ['tailoring-session', sessionId],
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<{
+        sessionId: string;
+        content: TailoringContent;
+        jobId: string;
+        job: Job | null;
+      }>>(`/tailoring/${sessionId}`);
+      return response.data.data;
+    },
+    enabled: enabled && Boolean(sessionId),
+    retry: false,
   });
 }
 
@@ -61,25 +79,6 @@ export function useAcceptTailoring() {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to accept tailoring");
-    },
-  });
-}
-
-export function useCreateApplication() {
-  return useMutation({
-    mutationFn: async (payload: {
-      jobId: string;
-      tailoringSessionId?: string;
-      status?: string;
-    }) => {
-      const res = await api.post<ApiResponse<{ id: string }>>("/applications", payload);
-      return res.data.data;
-    },
-    onSuccess: () => {
-      toast.success("Application recorded");
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to record application");
     },
   });
 }

@@ -14,10 +14,9 @@ export interface Profile {
   location: string
   skills: string[]
   jobTitles: string[]
-  remoteOnly: boolean
-  minSalary: number | null
-  maxSalary: number | null
-  createdAt: string
+  remotePref: boolean
+  salaryMin: number | null
+  salaryMax: number | null
   updatedAt: string
 }
 
@@ -59,8 +58,9 @@ export interface Application {
   userId: string
   jobId: string
   job: Job
-  status: "Pending" | "Applied" | "Interview" | "Rejected"
-  tailoredCvUrl: string | null
+  status: "PENDING" | "APPLIED" | "INTERVIEW" | "REJECTED"
+  cvDocUrl: string | null
+  coverLetterUrl: string | null
   createdAt: string
   updatedAt: string
 }
@@ -142,7 +142,7 @@ export interface Job {
   isRemote: boolean;
   postedAt: string;
   createdAt: string;
-  url?: string;
+  applyUrl: string | null;
 }
 
 export interface MatchDetails {
@@ -180,7 +180,7 @@ export interface SearchParams {
   salaryMin?: number;
   salaryMax?: number;
   page?: number;
-  pageSize?: number;
+  limit?: number;
 }
 
 export interface JobDetailState {
@@ -218,11 +218,11 @@ export interface TailoredCV {
   title: string;
   contact: TailoredContact;
   summary: string;
-  skills: Record<string, string[]>;
+  skills: Record<string, string | string[]>;
   experience: Array<{
     company?: string;
-    role?: string;
-    duration?: string;
+    title?: string;
+    dates?: string;
     bullets?: string[];
   }>;
   education: Array<{
@@ -233,7 +233,7 @@ export interface TailoredCV {
   projects: Array<{
     name?: string;
     description?: string;
-    tech?: string[];
+    tech?: string | string[];
   }>;
 }
 

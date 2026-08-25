@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import type { ApiResponse, FeedResponse, Job, SearchParams } from "@/types";
 
@@ -13,12 +13,13 @@ export function useFeedSearch(params: SearchParams = {}) {
         params: {
           ...params,
           page: params.page ?? 1,
-          pageSize: params.pageSize ?? 20,
+          limit: params.limit ?? 20,
         },
       });
       return res.data.data;
     },
     enabled: !hasSearch || params.q!.length > 2,
+    placeholderData: keepPreviousData,
   });
 }
 

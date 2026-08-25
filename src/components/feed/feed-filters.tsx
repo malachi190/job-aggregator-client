@@ -106,7 +106,7 @@ export function FeedFilters({ filters, onChange }: FeedFiltersProps) {
           onChange({
             q: filters.q,
             page: 1,
-            pageSize: filters.pageSize,
+            limit: filters.limit,
           })
         }
       >

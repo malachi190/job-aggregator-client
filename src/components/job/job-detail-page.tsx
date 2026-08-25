@@ -16,7 +16,7 @@ export function JobDetailPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const stateItem = (location.state as Record<string, unknown> | undefined)
+  const stateItem = (location.state as unknown as Record<string, unknown> | undefined)
     ?.item as FeedItem | undefined;
 
   const { data: fetchedJob, isLoading } = useJob(
@@ -62,7 +62,7 @@ export function JobDetailPage() {
 
         <div className="space-y-6">
           <JobOverview job={job} />
-          <JobActions jobId={job.id} jobUrl={job.url} />
+          <JobActions jobId={job.id} applyUrl={job.applyUrl} />
           {details && (
             <div className="rounded-xl border border-[#d9d9d9]/50 bg-white p-5 dark:border-[#353535] dark:bg-[#353535]">
               <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#353535]/60 dark:text-[#d9d9d9]/60">

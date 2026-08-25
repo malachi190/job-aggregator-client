@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useLocation } from "@tanstack/react-router";
 import { CVPreview } from "./cv-preview";
 import { CoverLetterPreview } from "./cover-letter-preview";
@@ -8,6 +8,8 @@ import type { TailoringContent, Job } from "@/types";
 import { Briefcase, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
+import { useTailoringSession } from '@/hooks/api/use-tailoring';
+import { LoadingSpinner } from '@/components/ui/spinner';
 
 export function TailoringSessionPage() {
   const { sessionId } = useParams({ from: "/_app/tailoring/$sessionId" });
@@ -31,8 +33,16 @@ export function TailoringSessionPage() {
     coverLetterUrl?: string;
   }>({});
 
-  const job = state?.job;
-  const jobId = state?.jobId || "";
+  const { data: restored, isLoading } = useTailoringSession(sessionId, !state?.content);
+
+  useEffect(() => {
+    if (restored?.content) setContent(restored.content);
+  }, [restored]);
+
+  const job = state?.job ?? restored?.job ?? undefined;
+  const jobId = state?.jobId || restored?.jobId || "";
+
+  if (isLoading) return <LoadingSpinner className="min-h-[50vh]" size={36} />;
 
   if (!content) {
     return (
@@ -115,7 +125,7 @@ export function TailoringSessionPage() {
         <TailoringActions
           sessionId={sessionId}
           jobId={jobId}
-          jobUrl={job?.url}
+          applyUrl={job?.applyUrl}
           isAccepted={isAccepted}
           downloadUrls={downloadUrls}
           onAccepted={handleAccepted}

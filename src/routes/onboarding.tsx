@@ -62,9 +62,9 @@ function OnboardingPage() {
         location,
         skills,
         jobTitles,
-        remoteOnly,
-        minSalary: minSalary ? parseInt(minSalary) : null,
-        maxSalary: maxSalary ? parseInt(maxSalary) : null,
+        remotePref: remoteOnly,
+        salaryMin: minSalary ? parseInt(minSalary) : undefined,
+        salaryMax: maxSalary ? parseInt(maxSalary) : undefined,
       },
       {
         onSuccess: () => {
