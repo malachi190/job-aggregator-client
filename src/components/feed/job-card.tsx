@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
 import type { FeedItem } from "@/types";
+import { formatSalaryAmount } from "@/lib/currency";
 
 interface JobCardProps {
   item: FeedItem;
@@ -76,8 +77,9 @@ export function JobCard({ item }: JobCardProps) {
 
           {job.salaryMin !== null && (
             <p className="mt-2 text-sm font-medium text-[#353535] dark:text-[#d9d9d9]">
-              ${job.salaryMin.toLocaleString()}
-              {job.salaryMax !== null && ` – ${job.salaryMax.toLocaleString()}`}
+              {formatSalaryAmount(job.salaryMin, job.salaryCurrency)}
+              {job.salaryMax !== null &&
+                ` – ${formatSalaryAmount(job.salaryMax, job.salaryCurrency)}`}
             </p>
           )}
 

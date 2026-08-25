@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Briefcase, DollarSign, Calendar, Shield } from "lucide-react";
 import type { Job } from "@/types";
+import { formatSalaryAmount } from "@/lib/currency";
 
 interface JobOverviewProps {
   job: Job;
@@ -10,14 +11,9 @@ export function JobOverview({ job }: JobOverviewProps) {
   const sourceName =
     ({ remotive: "Remotive", jobberman: "Jobberman", myjobmag: "MyJobMag" }[
       job.source?.name.toLowerCase() || ""
-    ] ?? job.source?.name) || "verified job board";
-  const formatSalary = (amount: number) =>
-    new Intl.NumberFormat("en", {
-      style: "currency",
-      currency: job.salaryCurrency || "USD",
-      maximumFractionDigits: 0,
-    }).format(amount);
-
+    ] ??
+      job.source?.name) ||
+    "verified job board";
   const items = [
     {
       icon: MapPin,
@@ -40,7 +36,7 @@ export function JobOverview({ job }: JobOverviewProps) {
       label: "Salary",
       value:
         job.salaryMin != null
-          ? `${formatSalary(job.salaryMin)}${job.salaryMax != null ? ` – ${formatSalary(job.salaryMax)}` : ""}`
+          ? `${formatSalaryAmount(job.salaryMin, job.salaryCurrency)}${job.salaryMax != null ? ` – ${formatSalaryAmount(job.salaryMax, job.salaryCurrency)}` : ""}`
           : "Not specified",
     },
     {
