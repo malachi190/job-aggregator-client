@@ -138,11 +138,15 @@ export interface Job {
   region: string;
   salaryMin: number | null;
   salaryMax: number | null;
+  salaryCurrency: string | null;
   employmentType: string | null;
   isRemote: boolean;
   postedAt: string;
   createdAt: string;
   applyUrl: string | null;
+  source?: {
+    name: string;
+  };
 }
 
 export interface MatchDetails {

@@ -7,6 +7,12 @@ interface JobSkillsProps {
 
 export function JobSkills({ job }: JobSkillsProps) {
   if (!job.skills?.length) return null;
+  const skills = job.skills.filter(
+    (skill, index, all) =>
+      all.findIndex(
+        (candidate) => candidate.toLowerCase() === skill.toLowerCase(),
+      ) === index,
+  );
 
   return (
     <div className="space-y-3">
@@ -14,7 +20,7 @@ export function JobSkills({ job }: JobSkillsProps) {
         Skills
       </h2>
       <div className="flex flex-wrap gap-2">
-        {job.skills.map((skill) => (
+        {skills.map((skill) => (
           <Badge
             key={skill}
             variant="outline"

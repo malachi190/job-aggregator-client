@@ -7,6 +7,17 @@ interface JobOverviewProps {
 }
 
 export function JobOverview({ job }: JobOverviewProps) {
+  const sourceName =
+    ({ remotive: "Remotive", jobberman: "Jobberman", myjobmag: "MyJobMag" }[
+      job.source?.name.toLowerCase() || ""
+    ] ?? job.source?.name) || "verified job board";
+  const formatSalary = (amount: number) =>
+    new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: job.salaryCurrency || "USD",
+      maximumFractionDigits: 0,
+    }).format(amount);
+
   const items = [
     {
       icon: MapPin,
@@ -29,7 +40,7 @@ export function JobOverview({ job }: JobOverviewProps) {
       label: "Salary",
       value:
         job.salaryMin != null
-          ? `$${job.salaryMin.toLocaleString()}${job.salaryMax != null ? ` – ${job.salaryMax.toLocaleString()}` : ""}`
+          ? `${formatSalary(job.salaryMin)}${job.salaryMax != null ? ` – ${formatSalary(job.salaryMax)}` : ""}`
           : "Not specified",
     },
     {
@@ -74,8 +85,7 @@ export function JobOverview({ job }: JobOverviewProps) {
       <div className="flex items-start gap-3 rounded-xl border border-[#d9d9d9]/50 bg-white p-4 dark:border-[#353535] dark:bg-[#353535]">
         <Shield className="mt-0.5 h-4 w-4 shrink-0 text-[#3c6e71]" />
         <p className="text-xs leading-relaxed text-[#353535]/70 dark:text-[#d9d9d9]/70">
-          All roles on Crawler are sourced from verified channels — recruiters,
-          HR managers and vetted job boards.
+          Source: {sourceName}. Applications open on the original listing.
         </p>
       </div>
     </div>
