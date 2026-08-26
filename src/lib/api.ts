@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { User } from "@/types";
 
 export const api = axios.create({
-  baseURL: "",
+  baseURL: import.meta.env.VITE_API_URL || "",
   headers: {
     "Content-Type": "application/json",
   },

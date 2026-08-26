@@ -7,7 +7,7 @@ node_modules/
 # Build outputs
 dist/
 build/
-# .output/
+.output/
 # .vinxi/
 .tanstack/
 
@@ -53,8 +53,7 @@ coverage/
 .DS_Store
 Thumbs.db
 
-# Package manager locks (uncomment if you standardize on one)
-package-lock.json
+# Package manager locks
 # yarn.lock
 
 # Misc
