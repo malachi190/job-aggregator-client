@@ -44,7 +44,7 @@ function LandingPage() {
             <Link to="/register">
               <Button size="lg" className="gap-2 bg-[#3c6e71] hover:bg-[#284b63]">
                 <Zap className="h-4 w-4" />
-                Start Free
+                Get Started
               </Button>
             </Link>
             <Link to="/login">
