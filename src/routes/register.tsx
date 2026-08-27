@@ -54,12 +54,12 @@ function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const { isSignedIn, isLoaded: clerkLoaded, signOut } = useAuth();
-  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
   const token = useAuthStore((state) => state.token);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  const isReady = clerkLoaded && hasHydrated;
+  const isReady = clerkLoaded && isInitialized;
   const isAuthenticated = isSignedIn || !!token;
 
   useEffect(() => {

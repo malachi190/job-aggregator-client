@@ -22,12 +22,11 @@ interface ClerkLoginInput {
 
 interface AuthResponse {
   accessToken: string;
-  refreshToken: string;
   user: User;
 }
 
 export function useLogin() {
-  const setToken = useAuthStore((state) => state.setToken);
+  const setSession = useAuthStore((state) => state.setSession);
 
   return useMutation({
     mutationFn: async (credentials: LoginInput) => {
@@ -39,8 +38,8 @@ export function useLogin() {
     },
     onSuccess: (data) => {
       if (data.status && data.data) {
-        const { accessToken, refreshToken, user } = data.data;
-        setToken(accessToken, refreshToken, "password", user);
+        const { accessToken, user } = data.data;
+        setSession(accessToken, "password", user);
         toast.success("Logged in successfully");
         // Let login.tsx useEffect handle redirect reactively,
         // OR uncomment below for immediate navigation:
@@ -54,7 +53,7 @@ export function useLogin() {
 }
 
 export function useClerkLogin() {
-  const setToken = useAuthStore((s) => s.setToken);
+  const setSession = useAuthStore((s) => s.setSession);
 
   return useMutation({
     mutationFn: async (input: ClerkLoginInput) => {
@@ -67,8 +66,8 @@ export function useClerkLogin() {
     },
     onSuccess: (data) => {
       if (data.status && data.data) {
-        const { accessToken, refreshToken, user } = data.data;
-        setToken(accessToken, refreshToken, "clerk", user);
+        const { accessToken, user } = data.data;
+        setSession(accessToken, "clerk", user);
         toast.success("Welcome back");
       }
     },
@@ -77,7 +76,7 @@ export function useClerkLogin() {
 }
 
 export function useRegister() {
-  const setToken = useAuthStore((s) => s.setToken);
+  const setSession = useAuthStore((s) => s.setSession);
 
   return useMutation({
     mutationFn: async (input: RegisterInput) => {
@@ -89,8 +88,8 @@ export function useRegister() {
     },
     onSuccess: (data) => {
       if (data.status && data.data) {
-        const { accessToken, refreshToken, user } = data.data;
-        setToken(accessToken, refreshToken, user.authProvider, user);
+        const { accessToken, user } = data.data;
+        setSession(accessToken, user.authProvider, user);
         toast.success("Account created — welcome to Crawler");
       }
     },

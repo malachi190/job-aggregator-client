@@ -1,39 +1,28 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { User } from '@/types';
+import { create } from "zustand";
+import type { User } from "@/types";
+
+type AuthProvider = "clerk" | "password";
 
 interface AuthState {
   token: string | null;
-  refreshToken: string | null;
-  provider: 'clerk' | 'password' | null;
+  provider: AuthProvider | null;
   user: User | null;
-  hasHydrated: boolean;
+  isInitialized: boolean;
   isAuthenticated: () => boolean;
-  setToken: (token: string, refreshToken: string, provider: 'clerk' | 'password', user: User) => void;
+  setSession: (token: string, provider: AuthProvider, user: User) => void;
   clearAuth: () => void;
-  setHasHydrated: (value: boolean) => void;
+  setInitialized: (value: boolean) => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set, get) => ({
-      token: null,
-      refreshToken: null,
-      provider: null,
-      user: null,
-      hasHydrated: false,
-      isAuthenticated: () => Boolean(get().token),
-      setToken: (token, refreshToken, provider, user) => 
-        set({ token, refreshToken, provider, user }),
-      clearAuth: () => 
-        set({ token: null, refreshToken: null, provider: null, user: null }),
-      setHasHydrated: (value) => set({ hasHydrated: value }),
-    }),
-    {
-      name: 'auth-storage',
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
-      },
-    }
-  )
-);
+// Deliberately not persisted: access tokens only live in memory. Password
+// sessions are restored through the HttpOnly refresh cookie on application load.
+export const useAuthStore = create<AuthState>((set, get) => ({
+  token: null,
+  provider: null,
+  user: null,
+  isInitialized: false,
+  isAuthenticated: () => Boolean(get().token),
+  setSession: (token, provider, user) => set({ token, provider, user }),
+  clearAuth: () => set({ token: null, provider: null, user: null }),
+  setInitialized: (value) => set({ isInitialized: value }),
+}));

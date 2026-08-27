@@ -48,30 +48,13 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { isSignedIn, isLoaded: clerkLoaded, signOut } = useAuth();
-  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
   const token = useAuthStore((state) => state.token);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  const isReady = clerkLoaded && hasHydrated;
+  const isReady = clerkLoaded && isInitialized;
   const isAuthenticated = isSignedIn || !!token;
-
-  useEffect(() => {
-    if (!clerkLoaded) return;
-
-    const hasClerkCookie = document.cookie.includes("__session");
-    const hasZustandToken = !!useAuthStore.getState().token;
-
-    // Clerk says signed out, but cookie or token still exists = broken state
-    if (!isSignedIn && (hasClerkCookie || hasZustandToken)) {
-      useAuthStore.getState().clearAuth();
-      document.cookie.split(";").forEach((cookie) => {
-        const [name] = cookie.split("=");
-        document.cookie = `${name.trim()}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      });
-      window.location.reload();
-    }
-  }, [clerkLoaded, isSignedIn]);
 
   useEffect(() => {
     if (!isReady) return;

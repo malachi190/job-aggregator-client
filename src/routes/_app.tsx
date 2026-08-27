@@ -31,7 +31,7 @@ function AppLayout() {
     isLoaded: clerkLoaded,
     signOut: clerkSignOut,
   } = useAuth();
-  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
   const token = useAuthStore((state) => state.token);
   const navigate = useNavigate();
   const isAuthenticated = isSignedIn || !!token;
@@ -39,8 +39,7 @@ function AppLayout() {
     enabled: isAuthenticated,
   });
 
-  // Wait for everything: Clerk init, Zustand hydrate, AND profile resolve
-  const isReady = clerkLoaded && hasHydrated;
+  const isReady = clerkLoaded && isInitialized;
 
   useEffect(() => {
     if (!isReady) return;

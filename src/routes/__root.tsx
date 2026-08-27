@@ -3,7 +3,7 @@ import { ClerkProvider } from "@clerk/tanstack-react-start"
 import { QueryProvider } from "@/providers/query-provider"
 import { ThemeProvider } from "@/providers/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
-import { useClerkSync } from "@/hooks/use-clerk-sync"
+import { useSessionBootstrap } from "@/hooks/use-session-bootstrap"
 import "../styles.css"
 
 export const Route = createRootRoute({
@@ -43,10 +43,10 @@ function RootComponent() {
         <ClerkProvider>
           <ThemeProvider>
             <QueryProvider>
-              <ClerkSyncWrapper>
+              <SessionBootstrapWrapper>
                 <Outlet />
                 <Toaster position="top-right" richColors />
-              </ClerkSyncWrapper>
+              </SessionBootstrapWrapper>
             </QueryProvider>
           </ThemeProvider>
         </ClerkProvider>
@@ -56,7 +56,7 @@ function RootComponent() {
   )
 }
 
-function ClerkSyncWrapper({ children }: { children: React.ReactNode }) {
-  useClerkSync()
+function SessionBootstrapWrapper({ children }: { children: React.ReactNode }) {
+  useSessionBootstrap()
   return children
 }

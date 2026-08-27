@@ -1,7 +1,14 @@
-import axios from "axios";
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { useAuthStore } from "@/stores/auth-store";
 import { toast } from "sonner";
-import { User } from "@/types";
+import type { ApiResponse, User } from "@/types";
+
+interface AuthResponse {
+  accessToken: string;
+  user: User;
+}
+
+type RetryableRequest = InternalAxiosRequestConfig & { _retry?: boolean };
 
 const apiBaseUrl =
   import.meta.env.VITE_API_URL ||
@@ -9,9 +16,8 @@ const apiBaseUrl =
 
 export const api = axios.create({
   baseURL: apiBaseUrl,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  withCredentials: true,
+  headers: { "Content-Type": "application/json" },
 });
 
 const PUBLIC_ENDPOINTS = ["/auth/login", "/auth/register", "/auth/refresh"];
@@ -23,127 +29,76 @@ api.interceptors.request.use((config) => {
     const { token, provider } = useAuthStore.getState();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      if (provider) {
-        config.headers["x-auth-provider"] = provider;
-      }
+      if (provider) config.headers["x-auth-provider"] = provider;
     }
   }
 
   return config;
 });
 
-// api.interceptors.request.use(
-//   (config) => {
-//     const { token, provider } = useAuthStore.getState();
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//       config.headers["x-auth-provider"] = provider;
-//     }
+let passwordRefreshPromise: Promise<string> | null = null;
 
-//     return config;
-//   },
-//   (error) => Promise.reject(error),
-// );
+export function refreshPasswordSession(): Promise<string> {
+  if (passwordRefreshPromise) return passwordRefreshPromise;
+
+  passwordRefreshPromise = api
+    .post<ApiResponse<AuthResponse>>("/auth/refresh")
+    .then(({ data }) => {
+      const session = data.data;
+      useAuthStore
+        .getState()
+        .setSession(session.accessToken, "password", session.user);
+      return session.accessToken;
+    })
+    .finally(() => {
+      passwordRefreshPromise = null;
+    });
+
+  return passwordRefreshPromise;
+}
+
+function redirectToLogin(): void {
+  if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+    window.location.assign("/login");
+  }
+}
 
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Network errors (no response from server)
-    if (!error.response) {
-      return Promise.reject(error);
-    }
+  async (error: AxiosError<{ message?: string }>) => {
+    const originalRequest = error.config as RetryableRequest | undefined;
+    if (!error.response) return Promise.reject(error);
 
     const isPublic = PUBLIC_ENDPOINTS.some((url) =>
       originalRequest?.url?.startsWith(url),
     );
 
-    // 401 on protected endpoint → try refresh or redirect
-    if (
-      error.response.status === 401 &&
-      !originalRequest._retry &&
-      !isPublic
-    ) {
-      originalRequest._retry = true;
+    if (error.response.status === 401 && originalRequest && !isPublic) {
       const state = useAuthStore.getState();
 
-      if (state.provider === "password" && state.refreshToken) {
+      if (!originalRequest._retry && state.provider === "password") {
+        originalRequest._retry = true;
         try {
-          const res = await api.post("/auth/refresh", {
-            refreshToken: state.refreshToken,
-          });
-          const { accessToken, refreshToken } = res.data.data;
-          useAuthStore
-            .getState()
-            .setToken(accessToken, refreshToken, "password", state.user as User);
+          const accessToken = await refreshPasswordSession();
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           originalRequest.headers["x-auth-provider"] = "password";
           return api(originalRequest);
         } catch {
           useAuthStore.getState().clearAuth();
-          window.location.href = "/login";
+          redirectToLogin();
           return Promise.reject(error);
         }
       }
 
       useAuthStore.getState().clearAuth();
-      window.location.href = "/login";
+      redirectToLogin();
       return Promise.reject(error);
     }
 
-    // Only toast for non-401 errors. 401s are either:
-    // - Handled above (protected endpoints → refresh/redirect)
-    // - Handled by calling code (public endpoints like login/register)
     if (error.response.status !== 401) {
-      const message = error.response?.data?.message || "Something went wrong";
-      toast.error(message);
+      toast.error(error.response.data?.message || "Something went wrong");
     }
 
     return Promise.reject(error);
   },
 );
-
-// api.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalRequest = error.config;
-
-//     const isLoginRequest = error.config?.url?.startsWith("/auth/login");
-//     if ((error.response?.status === 401 && !originalRequest._retry) && !isLoginRequest) {
-//       originalRequest._retry = true;
-//       const state = useAuthStore.getState();
-
-//       if (state.provider === "password" && state.refreshToken) {
-//         try {
-//           const res = await axios.post("/auth/refresh", {
-//             refreshToken: state.refreshToken,
-//           });
-//           const { accessToken } = res.data.data;
-//           useAuthStore
-//             .getState()
-//             .setToken(
-//               accessToken,
-//               state.refreshToken,
-//               "password",
-//               state.user as User,
-//             );
-//           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-//           return api(originalRequest);
-//         } catch {
-//           useAuthStore.getState().clearAuth();
-//           window.location.href = "/login";
-//           return Promise.reject(error);
-//         }
-//       }
-
-//       useAuthStore.getState().clearAuth();
-//       window.location.href = "/login";
-//     }
-
-//     const message = error.response?.data?.message || "Something went wrong";
-//     toast.error(message);
-
-//     return Promise.reject(error);
-//   },
-// );
