@@ -3,8 +3,12 @@ import { useAuthStore } from "@/stores/auth-store";
 import { toast } from "sonner";
 import { User } from "@/types";
 
+const apiBaseUrl =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? "http://localhost:8080" : "");
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "",
+  baseURL: apiBaseUrl,
   headers: {
     "Content-Type": "application/json",
   },

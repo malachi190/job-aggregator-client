@@ -11,8 +11,8 @@ npm install
 npm run dev
 ```
 
-The development server runs on `http://localhost:3001` and proxies API routes
-to `http://localhost:8080`.
+The development server runs on `http://localhost:3001` and calls the API at
+`http://localhost:8080` by default. Set `VITE_API_URL` to override it.
 
 ## Validation
 
