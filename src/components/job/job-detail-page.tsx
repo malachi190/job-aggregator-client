@@ -52,8 +52,8 @@ export function JobDetailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_380px]">
+    <div className="mx-auto max-w-6xl">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px] lg:gap-8">
         <div className="space-y-6">
           <JobHeader job={job} matchScore={matchScore} />
           <JobDescription job={job} />

@@ -24,12 +24,17 @@ export function MobileFilterDrawer({
         className="absolute inset-0 bg-black/50"
         onClick={onClose}
       />
-      <div className="absolute left-0 top-0 h-full w-80 overflow-y-auto bg-white p-6 dark:bg-[#353535]">
+      <div className="absolute left-0 top-0 h-full w-[min(20rem,calc(100vw-2rem))] overflow-y-auto bg-white p-5 shadow-xl dark:bg-[#353535] sm:p-6">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-lg font-bold text-[#353535] dark:text-white">
             Filters
           </h2>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Close filters"
+            onClick={onClose}
+          >
             <X className="h-4 w-4" />
           </Button>
         </div>

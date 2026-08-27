@@ -117,10 +117,11 @@ function AppLayout() {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 sm:gap-3">
             <Button
               variant="ghost"
               size="icon"
+              aria-label="Toggle color theme"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               {theme === "dark" ? (
@@ -145,16 +146,49 @@ function AppLayout() {
               </div>
             </Show>
 
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Log out"
+              onClick={handleLogout}
+            >
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-5 pb-24 sm:px-6 sm:py-8 md:pb-8 lg:px-8">
         <Outlet />
       </main>
+
+      <nav
+        aria-label="Mobile navigation"
+        className="fixed inset-x-0 bottom-0 z-50 border-t bg-white/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur dark:bg-[#353535]/95 md:hidden"
+      >
+        <div className="mx-auto grid max-w-md grid-cols-4">
+          {([
+            { to: "/dashboard", label: "Feed", icon: LayoutGrid },
+            { to: "/applications", label: "Applications", icon: Briefcase },
+            { to: "/cvs", label: "CVs", icon: FileText },
+            { to: "/settings", label: "Settings", icon: Settings },
+          ] as const).map(({ to, label, icon: Icon }) => (
+            <Link
+              key={to}
+              to={to}
+              activeProps={{ className: "text-[#3c6e71]" }}
+              inactiveProps={{
+                className:
+                  "text-[#353535]/55 dark:text-[#d9d9d9]/60",
+              }}
+              className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-lg px-1 text-[11px] font-medium"
+            >
+              <Icon className="h-5 w-5" />
+              <span className="max-w-full truncate">{label}</span>
+            </Link>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }

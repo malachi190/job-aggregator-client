@@ -50,14 +50,17 @@ export function JobCard({ item }: JobCardProps) {
   };
 
   return (
-    <Card className="group relative overflow-hidden rounded-xl transition-shadow hover:shadow-md">
-      <Badge className={`absolute right-4 top-4 z-10 ${scoreColor}`}>
-        {matchPercent}% match
-      </Badge>
-
-      <CardContent className="p-5">
+    <Card className="overflow-hidden rounded-xl transition-shadow hover:shadow-md">
+      <CardContent className="p-4 sm:p-5">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-[#3c6e71]">{job.company}</p>
+          <div className="flex items-start justify-between gap-3">
+            <p className="min-w-0 truncate text-sm font-semibold text-[#3c6e71]">
+              {job.company}
+            </p>
+            <Badge className={`shrink-0 ${scoreColor}`}>
+              {matchPercent}% match
+            </Badge>
+          </div>
           <h3 className="mt-1 text-lg font-bold text-[#353535] dark:text-white">
             {job.title}
           </h3>
@@ -104,16 +107,14 @@ export function JobCard({ item }: JobCardProps) {
           </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-between border-t border-[#d9d9d9]/50 pt-3 text-xs text-[#353535]/50 dark:border-[#353535]/50 dark:text-[#d9d9d9]/50">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#d9d9d9]/50 pt-3 text-xs text-[#353535]/50 dark:border-[#353535]/50 dark:text-[#d9d9d9]/50">
           <span>{timeAgo(job.postedAt)}</span>
-        </div>
-
-        <div className="absolute inset-0 flex items-center justify-center bg-white/60 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 dark:bg-[#353535]/60">
           <Button
-            className="gap-2 bg-[#3c6e71] hover:bg-[#284b63]"
+            size="sm"
+            className="h-9 gap-1.5 bg-[#3c6e71] px-3 hover:bg-[#284b63]"
             onClick={handleViewDetails}
           >
-            View Job
+            View job
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>

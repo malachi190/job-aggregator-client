@@ -75,7 +75,7 @@ export function TailoringSessionPage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-5xl">
       <Button
         variant="ghost"
         className="mb-6 gap-2 pl-0 text-[#353535]/70 hover:text-[#353535] dark:text-[#d9d9d9]/70 dark:hover:text-white"
@@ -117,7 +117,7 @@ export function TailoringSessionPage() {
       </div>
 
       {/* Controls */}
-      <div className="mt-8 space-y-6 rounded-xl border border-[#d9d9d9]/50 bg-white p-6 dark:border-[#353535] dark:bg-[#353535]">
+      <div className="mt-6 space-y-6 rounded-xl border border-[#d9d9d9]/50 bg-white p-4 dark:border-[#353535] dark:bg-[#353535] sm:mt-8 sm:p-6">
         {!isAccepted && (
           <RefineForm sessionId={sessionId} onRefined={handleRefined} />
         )}

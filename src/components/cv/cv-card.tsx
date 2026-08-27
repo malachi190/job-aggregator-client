@@ -23,7 +23,7 @@ export function CVCard({
 
   return (
     <Card className="rounded-xl border-[#d9d9d9]/50 dark:border-[#353535]">
-      <CardContent className="flex items-center gap-4 p-4">
+      <CardContent className="flex flex-wrap items-center gap-3 p-4 sm:flex-nowrap sm:gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#3c6e71]/10">
           <FileText className="h-6 w-6 text-[#3c6e71]" />
         </div>
@@ -45,7 +45,7 @@ export function CVCard({
           </p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="ml-auto flex shrink-0 items-center gap-1">
           {!cv.isDefault && (
             <Button
               variant="ghost"

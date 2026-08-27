@@ -77,7 +77,7 @@ export function TailoringPrepPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-3xl">
       <Button
         variant="ghost"
         className="mb-6 gap-2 pl-0 text-[#353535]/70 hover:text-[#353535] dark:text-[#d9d9d9]/70 dark:hover:text-white"

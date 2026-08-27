@@ -78,9 +78,9 @@ function OnboardingPage() {
   const progress = (step / totalSteps) * 100
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#d9d9d9]/20 px-4 py-12 dark:bg-[#353535]">
+    <div className="flex min-h-screen items-center justify-center bg-[#d9d9d9]/20 px-4 py-6 dark:bg-[#353535] sm:py-12">
       <div className="w-full max-w-lg">
-        <div className="mb-8">
+        <div className="mb-5 sm:mb-8">
           <div className="mb-2 flex justify-between text-sm font-medium">
             <span>Step {step} of {totalSteps}</span>
             <span className="text-muted-foreground">{Math.round(progress)}%</span>
@@ -96,11 +96,11 @@ function OnboardingPage() {
         <Card>
           {step === 1 && (
             <>
-              <CardHeader>
+              <CardHeader className="p-5 sm:p-6">
                 <CardTitle>Basic Info</CardTitle>
                 <CardDescription>Tell us a bit about yourself</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 px-5 pb-5 sm:px-6 sm:pb-6">
                 <div className="space-y-2">
                   <Label>Full Name</Label>
                   <Input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="John Doe" />
@@ -136,11 +136,11 @@ function OnboardingPage() {
 
           {step === 2 && (
             <>
-              <CardHeader>
+              <CardHeader className="p-5 sm:p-6">
                 <CardTitle>Skills</CardTitle>
                 <CardDescription>Add your key technical skills</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 px-5 pb-5 sm:px-6 sm:pb-6">
                 <div className="flex gap-2">
                   <Input
                     value={skillInput}
@@ -178,11 +178,11 @@ function OnboardingPage() {
 
           {step === 3 && (
             <>
-              <CardHeader>
+              <CardHeader className="p-5 sm:p-6">
                 <CardTitle>Job Titles</CardTitle>
                 <CardDescription>What roles are you looking for?</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 px-5 pb-5 sm:px-6 sm:pb-6">
                 <div className="flex gap-2">
                   <Input
                     value={jobTitleInput}
@@ -220,11 +220,11 @@ function OnboardingPage() {
 
           {step === 4 && (
             <>
-              <CardHeader>
+              <CardHeader className="p-5 sm:p-6">
                 <CardTitle>Preferences</CardTitle>
                 <CardDescription>Final touches</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 px-5 pb-5 sm:px-6 sm:pb-6">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -235,7 +235,7 @@ function OnboardingPage() {
                   />
                   <Label htmlFor="remote">Remote only</Label>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Min Salary</Label>
                     <Input type="number" value={minSalary} onChange={(e) => setMinSalary(e.target.value)} placeholder="50000" />
@@ -245,7 +245,7 @@ function OnboardingPage() {
                     <Input type="number" value={maxSalary} onChange={(e) => setMaxSalary(e.target.value)} placeholder="150000" />
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2">
                   <Button variant="outline" className="flex-1 gap-2" onClick={() => setStep(3)}>
                     <ArrowLeft className="h-4 w-4" />
                     Back

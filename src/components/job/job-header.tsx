@@ -44,8 +44,8 @@ export function JobHeader({ job, matchScore }: JobHeaderProps) {
         Back to jobs
       </Button>
 
-      <div className="flex items-start gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#3c6e71] text-xl font-bold text-white">
+      <div className="flex items-start gap-3 sm:gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#3c6e71] text-lg font-bold text-white sm:h-14 sm:w-14 sm:text-xl">
           {companyInitial(job.company)}
         </div>
 

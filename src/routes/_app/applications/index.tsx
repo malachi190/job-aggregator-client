@@ -27,7 +27,7 @@ function ApplicationsPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
-      <h1 className="text-3xl font-bold tracking-tight">Applications</h1>
+      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Applications</h1>
         <p className="mt-1 text-sm text-muted-foreground">Track every role and keep your application status current.</p>
       </div>
 
@@ -38,7 +38,7 @@ function ApplicationsPage() {
         </CardContent></Card>
       ) : applications.map((application) => (
         <Card key={application.id}>
-          <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
+          <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:p-5">
             <div className="min-w-0 flex-1">
               <p className="font-semibold">{application.job.title}</p>
               <p className="text-sm text-[#3c6e71]">{application.job.company}</p>
@@ -47,11 +47,11 @@ function ApplicationsPage() {
             <select
               value={application.status}
               onChange={(event) => updateStatus.mutate({ id: application.id, status: event.target.value as ApplicationStatus })}
-              className="h-10 rounded-lg border bg-background px-3 text-sm"
+              className="h-10 w-full rounded-lg border bg-background px-3 text-sm sm:w-auto"
             >
               {statuses.map((status) => <option key={status} value={status}>{status[0] + status.slice(1).toLowerCase()}</option>)}
             </select>
-            <div className="flex gap-1">
+            <div className="flex justify-end gap-1">
               {application.cvDocUrl && <Button variant="ghost" size="icon" onClick={() => window.open(application.cvDocUrl!, '_blank')}><Download className="h-4 w-4" /></Button>}
               {application.job.applyUrl && <Button variant="ghost" size="icon" onClick={() => window.open(application.job.applyUrl!, '_blank', 'noopener,noreferrer')}><ExternalLink className="h-4 w-4" /></Button>}
               <Button variant="ghost" size="icon" onClick={() => remove.mutate(application.id)}><Trash2 className="h-4 w-4 text-red-500" /></Button>

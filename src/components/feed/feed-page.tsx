@@ -56,14 +56,14 @@ export function FeedPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div>
       <FeedSearchBar
         value={searchQuery}
         onChange={setSearchQuery}
         onOpenFilters={() => setShowMobileFilters(true)}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="py-5 sm:py-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
           <FeedSidebar filters={filters} onChange={handleFiltersChange} />
 

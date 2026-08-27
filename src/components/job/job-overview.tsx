@@ -64,11 +64,11 @@ export function JobOverview({ job }: JobOverviewProps) {
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#3c6e71]/10">
                 <Icon className="h-4 w-4 text-[#3c6e71]" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-medium uppercase tracking-wider text-[#353535]/50 dark:text-[#d9d9d9]/50">
                   {label}
                 </p>
-                <p className="text-sm font-semibold text-[#353535] dark:text-white">
+                <p className="break-words text-sm font-semibold text-[#353535] dark:text-white">
                   {value}
                 </p>
               </div>

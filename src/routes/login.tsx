@@ -71,8 +71,8 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#d9d9d9]/20 px-4 dark:bg-[#353535]">
-      <div className="w-full max-w-md space-y-6">
+    <div className="flex min-h-screen items-center justify-center bg-[#d9d9d9]/20 px-4 py-8 dark:bg-[#353535]">
+      <div className="w-full max-w-md space-y-5 sm:space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold tracking-tight text-[#353535] dark:text-white">
             Welcome back
@@ -100,22 +100,11 @@ function LoginPage() {
           </CardContent>
         </Card> */}
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-[#d9d9d9] dark:border-[#353535]" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-[#d9d9d9]/20 px-2 text-[#353535]/50 dark:bg-[#353535] dark:text-[#d9d9d9]/50">
-              Or continue with email
-            </span>
-          </div>
-        </div>
-
         <Card>
-          <CardHeader>
+          <CardHeader className="p-5 sm:p-6">
             <CardTitle>Email & Password</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-5 pb-5 sm:px-6 sm:pb-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>

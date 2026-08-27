@@ -52,9 +52,9 @@ function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Settings</h1>
       <p className="mt-1 text-sm text-muted-foreground">Update the profile used to rank your job feed.</p>
-      <Card className="mt-6"><CardHeader><CardTitle>Job preferences</CardTitle></CardHeader><CardContent>
+      <Card className="mt-5 sm:mt-6"><CardHeader className="p-5 sm:p-6"><CardTitle>Job preferences</CardTitle></CardHeader><CardContent className="px-5 pb-5 sm:px-6 sm:pb-6">
         <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
           {([['fullName', 'Full name'], ['role', 'Current role'], ['seniority', 'Seniority'], ['location', 'Location']] as const).map(([key, label]) => <div key={key} className="space-y-2"><Label>{label}</Label><Input value={form[key]} onChange={(event) => set(key, event.target.value)} required /></div>)}
           <div className="space-y-2 sm:col-span-2"><Label>Skills (comma separated)</Label><Input value={form.skills} onChange={(event) => set('skills', event.target.value)} required /></div>
